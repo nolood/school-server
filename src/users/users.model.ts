@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, UUIDV4 } from 'sequelize';
 import { Column, Model, Table } from 'sequelize-typescript';
 
 interface UserCreationAttributes {
@@ -8,16 +8,21 @@ interface UserCreationAttributes {
 
 @Table({ tableName: 'users' })
 export class User extends Model<User, UserCreationAttributes> {
-  @Column({ type: DataTypes.INTEGER, unique: true, primaryKey: true, autoIncrement: true })
+  @Column({
+    type: DataTypes.UUIDV4,
+    unique: true,
+    primaryKey: true,
+    defaultValue: UUIDV4,
+  })
   id: number;
   @Column({ type: DataTypes.STRING, unique: true })
-  username: string;
+  email: string;
   @Column({ type: DataTypes.STRING })
   password: string;
-  @Column({ type: DataTypes.INTEGER })
-  inventory: number;
-  @Column({ type: DataTypes.INTEGER, allowNull: false, defaultValue: 1000 })
-  balance: number;
-  @Column({ type: DataTypes.INTEGER, allowNull: false, defaultValue: 5 })
-  rating: number;
+  @Column({ type: DataTypes.STRING })
+  nickname: string;
+  @Column({ type: DataTypes.STRING, allowNull: false })
+  fullName: string;
+  @Column({ type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: ['USER'] })
+  roles: string[];
 }
