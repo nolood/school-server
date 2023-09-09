@@ -1,4 +1,4 @@
-import { DataTypes, UUIDV4 } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { BelongsToMany, Column, Model, Table } from 'sequelize-typescript';
 import { Role } from '../roles/roles.model';
 import { UserRoles } from '../roles/user-roles.model';
@@ -22,7 +22,7 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({ type: DataTypes.STRING })
   password: string;
   @Column({ type: DataTypes.STRING })
-  nickname: string;
+  username: string;
   @Column({ type: DataTypes.STRING, allowNull: false })
   fullName: string;
 
