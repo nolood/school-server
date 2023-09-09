@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { RolesService } from 'src/roles/roles.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './users.model';
+import { Role } from '../roles/roles.model';
 @Injectable()
 export class UsersService {
   constructor(
@@ -17,7 +18,7 @@ export class UsersService {
   }
 
   async getAllUsers() {
-    const users = await this.userRepository.findAll();
+    const users = await this.userRepository.findAll({ include: { all: true } });
     return users;
   }
 
