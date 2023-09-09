@@ -1,5 +1,7 @@
 import { DataTypes, UUIDV4 } from 'sequelize';
-import { Column, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, Model, Table } from 'sequelize-typescript';
+import { Role } from '../roles/roles.model';
+import { UserRoles } from '../roles/user-roles.model';
 
 interface UserCreationAttributes {
   username: string;
@@ -9,10 +11,10 @@ interface UserCreationAttributes {
 @Table({ tableName: 'users' })
 export class User extends Model<User, UserCreationAttributes> {
   @Column({
-    type: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
     unique: true,
     primaryKey: true,
-    defaultValue: UUIDV4,
+    autoIncrement: true,
   })
   id: number;
   @Column({ type: DataTypes.STRING, unique: true })
@@ -23,6 +25,7 @@ export class User extends Model<User, UserCreationAttributes> {
   nickname: string;
   @Column({ type: DataTypes.STRING, allowNull: false })
   fullName: string;
-  @Column({ type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: ['USER'] })
-  roles: string[];
+
+  @BelongsToMany(() => User, () => UserRoles)
+  roles: Role[];
 }
