@@ -6,12 +6,12 @@ import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
+  private readonly secretKey = process.env.PRIVATE_KEY || 'EGORLOX';
+
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
-
-  private readonly secretKey = process.env.PRIVATE_KEY || 'EGORLOX';
 
   async login(dto: CreateUserDto) {
     const user = await this.validateUser(dto);
@@ -31,10 +31,18 @@ export class AuthService {
     return this.generateToken(user);
   }
 
+  decodeToken(token: string): number {
+    const decoded: { id: number } = this.jwtService.decode(token) as { id: number };
+    return decoded.id;
+  }
+
   private async generateToken(user) {
     const payload = {
       username: user.username,
       id: user.id,
+      roles: user.roles,
+      fullName: user.fullName,
+      email: user.email,
     };
 
     return { token: this.jwtService.sign(payload) };
@@ -47,10 +55,5 @@ export class AuthService {
       return user;
     }
     throw new UnauthorizedException({ message: 'Неверный логин или пароль' });
-  }
-
-  decodeToken(token: string): number {
-    const decoded: { id: number } = this.jwtService.decode(token) as { id: number };
-    return decoded.id;
   }
 }
